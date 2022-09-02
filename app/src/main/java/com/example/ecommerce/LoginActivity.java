@@ -86,13 +86,13 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
 
     private void LoginUser(String uphnumber, String upassword) {
 
         uphnumber=phnumber.getText().toString();
         upassword=password.getText().toString();
+//        Toast.makeText(this, ""+uphnumber, Toast.LENGTH_SHORT).show();
 
         if(!TextUtils.isEmpty(uphnumber) && !TextUtils.isEmpty(upassword)){
             loadingbar.setTitle("Login Account");
@@ -108,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void AllowAcessToAccount(String uphnumber, String upassword) {
+//        Toast.makeText(this, ""+uphnumber, Toast.LENGTH_SHORT).show();
         if(chboxrememberme.isChecked()){
             Paper.book().write(Prevalent.UPHONENUMBER,uphnumber);
             Paper.book().write(Prevalent.UPASSWORD,upassword);
@@ -115,6 +116,8 @@ public class LoginActivity extends AppCompatActivity {
         rootref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String chech=Paper.book().read(Prevalent.UPHONENUMBER);
+//                Toast.makeText(LoginActivity.this, ""+chech, Toast.LENGTH_SHORT).show();
                 if(snapshot.child("Users").child(uphnumber).exists()){
 //                    Toast.makeText(LoginActivity.this, "Data exists..", Toast.LENGTH_SHORT).show();
                     Users userdata=snapshot.child(parentdbname).child(uphnumber).getValue(Users.class);
