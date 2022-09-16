@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back3"
+    android:background="@drawable/register"
     tools:context=".RegisterActivity">
 
     <ImageView
@@ -13,7 +13,7 @@
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="110dp"
-        android:src="@drawable/applogo2" />
+        android:src="@drawable/applogo" />
 
     <EditText
         android:id="@+id/register_name"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back3"
+    android:background="@drawable/welcome"
     android:alpha="10"
     tools:context=".MainActivity">
 
@@ -14,7 +14,7 @@
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="140dp"
-        android:src="@drawable/applogo2" />
+        android:src="@drawable/applogo" />
 
     <TextView
         android:id="@+id/app_slogan"

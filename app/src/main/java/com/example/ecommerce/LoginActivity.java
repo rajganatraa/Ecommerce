@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,8 +33,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText phnumber,password;
     private Button loginbtn;
     private ProgressDialog loadingbar;
+    private TextView adminlink,notadminlink;
     String uphnumber,upassword;
-    String parentdbname="Users";
+    private String parentdbname="Users";
     boolean passwordVisible;
     private CheckBox chboxrememberme;
     DatabaseReference rootref= FirebaseDatabase.getInstance().getReference();
@@ -48,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
         phnumber=findViewById(R.id.Login_phone_number);
         password=findViewById(R.id.Login_password);
         loadingbar=new ProgressDialog(this);
+        adminlink=findViewById(R.id.admin_panel);
+        notadminlink=findViewById(R.id.not_admin_panel);
         chboxrememberme=findViewById(R.id.remember_me_chb);
         Paper.init(this);
 
@@ -57,6 +61,24 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 LoginUser(uphnumber,upassword);
+            }
+        });
+        adminlink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginbtn.setText("Login Admin");
+                adminlink.setVisibility(View.INVISIBLE);
+                notadminlink.setVisibility(View.VISIBLE);
+                parentdbname="Admins";
+            }
+        });
+        notadminlink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginbtn.setText("Login");
+                adminlink.setVisibility(View.VISIBLE);
+                notadminlink.setVisibility(View.INVISIBLE);
+                parentdbname="Users";
             }
         });
 
@@ -92,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
 
         uphnumber=phnumber.getText().toString();
         upassword=password.getText().toString();
-//        Toast.makeText(this, ""+uphnumber, Toast.LENGTH_SHORT).show();
 
         if(!TextUtils.isEmpty(uphnumber) && !TextUtils.isEmpty(upassword)){
             loadingbar.setTitle("Login Account");
@@ -108,7 +129,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void AllowAcessToAccount(String uphnumber, String upassword) {
-//        Toast.makeText(this, ""+uphnumber, Toast.LENGTH_SHORT).show();
         if(chboxrememberme.isChecked()){
             Paper.book().write(Prevalent.UPHONENUMBER,uphnumber);
             Paper.book().write(Prevalent.UPASSWORD,upassword);
@@ -116,23 +136,30 @@ public class LoginActivity extends AppCompatActivity {
         rootref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String chech=Paper.book().read(Prevalent.UPHONENUMBER);
-//                Toast.makeText(LoginActivity.this, ""+chech, Toast.LENGTH_SHORT).show();
-                if(snapshot.child("Users").child(uphnumber).exists()){
-//                    Toast.makeText(LoginActivity.this, "Data exists..", Toast.LENGTH_SHORT).show();
-                    Users userdata=snapshot.child(parentdbname).child(uphnumber).getValue(Users.class);
+
+                if(snapshot.child(parentdbname).child(uphnumber).exists()){
+                    Users userdata;
+                    userdata = snapshot.child(parentdbname).child(uphnumber).getValue(Users.class);
                     if(userdata.getPhone().equals(uphnumber) && userdata.getPassword().equals(upassword)){
-                        Toast.makeText(LoginActivity.this, "Login Successfull...", Toast.LENGTH_SHORT).show();
-                        loadingbar.dismiss();
-                        Intent intent=new Intent(LoginActivity.this,HomeActivity.class);
-                        String UserPhonekey=Paper.book().read(Prevalent.UPHONENUMBER);
-                        String Userpasswordkey=Paper.book().read(Prevalent.UPASSWORD);
-//                        Toast.makeText(this,"data:"+UserPhonekey+" "+Userpasswordkey, Toast.LENGTH_SHORT).show();
-                        Toast.makeText(LoginActivity.this, "data:"+UserPhonekey+" "+Userpasswordkey, Toast.LENGTH_SHORT).show();
-                        startActivity(intent );
+
+                        if(parentdbname.equals("Admins")){
+                            Toast.makeText(LoginActivity.this, "Login Admin Successful...", Toast.LENGTH_SHORT).show();
+                            loadingbar.dismiss();
+                            Intent intent=new Intent(LoginActivity.this,AdminCategoryActivity.class);
+                            startActivity(intent );
+                            finish();
+                        }
+                        else if(parentdbname.equals("Users")){
+                            Toast.makeText(LoginActivity.this, "Login Successful...", Toast.LENGTH_SHORT).show();
+                            loadingbar.dismiss();
+                            Intent intent=new Intent(LoginActivity.this,HomeActivity.class);
+                            startActivity(intent );
+                            finish();
+                        }
 
                     }
-                    else{
+                    else
+                    {
                         Toast.makeText(LoginActivity.this, "Please enter correct credentials", Toast.LENGTH_SHORT).show();
                         loadingbar.dismiss();
                     }
@@ -146,7 +173,6 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }

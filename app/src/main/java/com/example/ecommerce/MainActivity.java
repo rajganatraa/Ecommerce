@@ -70,16 +70,13 @@ public class MainActivity extends AppCompatActivity {
         rootref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                Toast.makeText(MainActivity.this, "data:"+uphnumber+" "+upassword, Toast.LENGTH_SHORT).show();
                 if(snapshot.child("Users").child(uphnumber).exists()){
-//                    Toast.makeText(MainActivity.this, "Data exists..", Toast.LENGTH_SHORT).show();
                     Users userdata=snapshot.child(parentdbname).child(uphnumber).getValue(Users.class);
                     if(userdata.getPhone().equals(uphnumber) && userdata.getPassword().equals(upassword)){
                         Toast.makeText(MainActivity.this, "Login Successfull...", Toast.LENGTH_SHORT).show();
                         loadingbar.dismiss();
-                        Intent intent=new Intent(MainActivity.this,
-                                HomeActivity.class);
-                        startActivity(intent );
+                        Intent intent=new Intent(MainActivity.this, HomeActivity.class);
+                        startActivity(intent);
                     }
                     else{
                         Toast.makeText(MainActivity.this, "Please enter correct credentials", Toast.LENGTH_SHORT).show();
